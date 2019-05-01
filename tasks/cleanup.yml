@@ -1,0 +1,20 @@
+---
+- name: Old Todo Identifier
+  become: true
+  find:
+    paths: /opt/todo
+    pattern: "todo-\\d+\\.\\d+\\.\\d+$"
+    recurse: no
+    file_type: directory
+    use_regex: yes
+    excludes: "todo-{{ todo_version }}"
+  register: todo_old_installations
+
+- name: Delete Old Todo Installations
+  become: true
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ todo_old_installations.files }}"
+  when: todo_old_installations.matched != 0
+

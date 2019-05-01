@@ -1,0 +1,52 @@
+---
+- name: Create Todo Directory
+  become: true
+  file:
+    path: /opt/todo/todo-{{ todo_version }}
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create Todo Bash Completion Directory
+  become: true
+  file:
+    path: /usr/local/share/bash_completion.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Download Todo
+  become: true
+  get_url:
+    url: "{{ todo_download_url }}"
+    dest: /opt/todo/todo-{{ todo_version }}/todo-{{ todo_version }}.tar.gz
+
+- name: Install Todo
+  become: true
+  unarchive:
+    src: /opt/todo/todo-{{ todo_version }}/todo-{{ todo_version }}.tar.gz
+    dest: /opt/todo/todo-{{ todo_version }}/
+    extra_opts:
+      - --strip-components=1
+
+- name: Creating symlink to Todo
+  become: true
+  file:
+    src: /opt/todo/todo-{{ todo_version }}/todo.sh
+    dest: /usr/local/bin/todo
+    owner: root
+    group: root
+    mode: 0755
+    state: link
+
+- name: Creating symlink to Todo bash completion
+  become: true
+  file:
+    src: /opt/todo/todo-{{ todo_version }}/todo_completion
+    dest: /usr/local/share/bash_completion.d/todo
+    owner: root
+    group: root
+    mode: 0644
+    state: link

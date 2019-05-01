@@ -1,0 +1,25 @@
+---
+- name: Get Todo release info
+  become: false
+  uri:
+    url: https://api.github.com/repos/todotxt/todo.txt-cli/releases/latest
+    headers:
+      Accept: 'application/vnd.github.v3+json'
+    return_content: yes
+  register: todo_release_info
+  changed_when: false
+
+- name: Set Todo Version
+  become: false
+  set_fact:
+    todo_version: "{{ todo_release_info.json.tag_name | replace('v', '') }}"
+  changed_when: false
+
+- name: Set Todo Download URL
+  become: false
+  vars:
+    linux_tarball_query: "assets[?name=='todo.txt_cli-{{ todo_version }}.tar.gz'].browser_download_url"
+  set_fact:
+    todo_download_url: "{{ todo_release_info.json | json_query(linux_tarball_query) | first }}"
+  changed_when: false
+
