@@ -1,0 +1,24 @@
+---
+- name: Create Config Directory
+  become: false
+  file:
+    path: "{{ local_user_homedir }}/.todo"
+    state: directory
+    owner: "{{ local_user_username }}"
+    mode: 0755
+
+- name: Create Data Directory
+  become: false
+  file:
+    path: "{{ todo_data_directory }}"
+    state: directory
+    owner: "{{ local_user_username }}"
+    mode: 0755
+
+- name: Configure Todo
+  become: false
+  template:
+    src: config.j2
+    dest: "{{ local_user_homedir }}/.todo/config"
+    mode: 0644
+
