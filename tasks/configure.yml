@@ -22,3 +22,13 @@
     dest: "{{ local_user_homedir }}/.todo/config"
     mode: 0644
 
+- name: "Create Todo Bash Alias ({{ todo_bash_alias }})"
+  become: false
+  lineinfile:
+    path: "{{ local_user_homedir }}/.bash_aliases"
+    regexp: "^alias {{ todo_bash_alias }}=.*$"
+    line: "alias {{ todo_bash_alias }}='todo'"
+    state: present
+    create: yes
+  when: todo_install_bash_alias
+

@@ -1,3 +1,5 @@
 ---
 todo_data_directory: "{{ local_user_homedir }}/todo-data"
+todo_bash_alias: t
+todo_install_bash_alias: false
 
