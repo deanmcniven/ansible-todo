@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -euo pipefail
+
+TODO="{{ todo_bin_path }}"
+DONE="{{ todo_data_directory }}/done.txt"
+
+# Archive done tasks
+$TODO archive > /dev/null
+
+# Get last entry date
+LAST_DATE="$(cat $DONE | awk '{ print $2 }' | sort --unique --reverse --version-sort | head -n1 )"
+
+echo "Displaying Tasks Completed: $LAST_DATE"
+grep --color=never "$LAST_DATE" "$DONE"

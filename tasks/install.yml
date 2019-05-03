@@ -50,3 +50,23 @@
     group: root
     mode: 0644
     state: link
+
+- name: Install Standup Tool
+  become: true
+  vars:
+    todo_bin_path: "/usr/local/bin/todo"
+  template:
+    src: standup.j2
+    dest: "/opt/todo/todo-{{ todo_version }}/standup.sh"
+    mode: 0755
+
+- name: Creating symlink to Standup
+  become: true
+  file:
+    src: /opt/todo/todo-{{ todo_version }}/standup.sh
+    dest: /usr/local/bin/standup
+    owner: root
+    group: root
+    mode: 0755
+    state: link
+
